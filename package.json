@@ -29,7 +29,9 @@
     },
     "dependencies": {
         "crypto-js": "^3.2.0",
-        "deprecated-react-native-prop-types": "^2.3.0"
+        "deprecated-react-native-prop-types": "^2.3.0",
+         "@react-native-community/progress-bar-android": "^1.0.4",
+        "@react-native-community/progress-view": "^1.0.3"
     },
     "devDependencies": {
         "prop-types": "^15.7.2"
