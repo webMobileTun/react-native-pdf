@@ -13,17 +13,18 @@ import {
     requireNativeComponent,
     View,
     Platform,
+    ViewPropTypes,
     StyleSheet,
     Image,
     Text
 } from 'react-native';
-
-import ReactNativeBlobUtil from 'react-native-blob-util'
-import {ViewPropTypes} from 'deprecated-react-native-prop-types';
-const SHA1 = require('crypto-js/sha1');
-import PdfView from './PdfView';
 import { ProgressBar } from '@react-native-community/progress-bar-android'
 import { ProgressView } from '@react-native-community/progress-view'
+
+import ReactNativeBlobUtil from 'react-native-blob-util'
+
+const SHA1 = require('crypto-js/sha1');
+import PdfView from './PdfView';
 
 export default class Pdf extends Component {
 
@@ -46,6 +47,7 @@ export default class Pdf extends Component {
         horizontal: PropTypes.bool,
         spacing: PropTypes.number,
         password: PropTypes.string,
+        progressBarColor: PropTypes.string,
         renderActivityIndicator: PropTypes.func,
         enableAntialiasing: PropTypes.bool,
         enableAnnotationRendering: PropTypes.bool,
@@ -279,7 +281,7 @@ export default class Pdf extends Component {
             .progress((received, total) => {
                 this.props.onLoadProgress && this.props.onLoadProgress(received / total);
                 if (this._mounted) {
-                    this.setState({progress: received / total});
+                    this.setState({progress: Math.floor(received / total)});
                 }
             });
 
@@ -398,7 +400,7 @@ export default class Pdf extends Component {
                             >
                                 {this.props.renderActivityIndicator
                                     ? this.props.renderActivityIndicator(this.state.progress)
-                                    :Platform.OS === 'android'
+                                    : Platform.OS === 'android'
                                         ? <ProgressBar
                                             progress={this.state.progress}
                                             indeterminate={false}
@@ -410,6 +412,7 @@ export default class Pdf extends Component {
                                             progress={this.state.progress}
                                             style={styles.progressBar}
                                             {...this.props.activityIndicatorProps}
+                                        />}
                             </View>):(
                                 Platform.OS === "android" || Platform.OS === "windows"?(
                                         <PdfCustom
