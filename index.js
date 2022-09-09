@@ -22,6 +22,8 @@ import ReactNativeBlobUtil from 'react-native-blob-util'
 import {ViewPropTypes} from 'deprecated-react-native-prop-types';
 const SHA1 = require('crypto-js/sha1');
 import PdfView from './PdfView';
+import { ProgressBar } from '@react-native-community/progress-bar-android'
+import { ProgressView } from '@react-native-community/progress-view'
 
 export default class Pdf extends Component {
 
@@ -396,7 +398,18 @@ export default class Pdf extends Component {
                             >
                                 {this.props.renderActivityIndicator
                                     ? this.props.renderActivityIndicator(this.state.progress)
-                                    : <Text>{`${(this.state.progress * 100).toFixed(2)}%`}</Text>}
+                                    :Platform.OS === 'android'
+                                        ? <ProgressBar
+                                            progress={this.state.progress}
+                                            indeterminate={false}
+                                            styleAttr="Horizontal"
+                                            style={styles.progressBar}
+                                            {...this.props.activityIndicatorProps}
+                                        />
+                                        : <ProgressView
+                                            progress={this.state.progress}
+                                            style={styles.progressBar}
+                                            {...this.props.activityIndicatorProps}
                             </View>):(
                                 Platform.OS === "android" || Platform.OS === "windows"?(
                                         <PdfCustom
